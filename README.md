@@ -88,6 +88,7 @@ DevOps	GitHub Actions, Fastlane
 ## 🌟 Contributors
 
 A huge thanks to our contributors who have helped make this project possible:
+
 	•	Kushagra 
  
 	•	Deepanshu 
