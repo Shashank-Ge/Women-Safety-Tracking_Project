@@ -1,4 +1,15 @@
 const locationText = document.getElementById('locationText');
+const sosButton = document.getElementById('sosButton');
+const shareLocationButton = document.getElementById('shareLocationButton');
+
+
+// Route Planning Variables
+let map, directionsService, directionsRenderer;
+const startInput = document.getElementById('startInput');
+const endInput = document.getElementById('endInput');
+const getRouteButton = document.getElementById('getRouteButton');
+
+
 
 if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
@@ -15,7 +26,7 @@ if (navigator.geolocation) {
     locationText.textContent = 'Geolocation is not supported by this browser.';
 }
 
-const sosButton = document.getElementById('sosButton');
+
 sosButton.addEventListener('click', () => {
     navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -46,7 +57,7 @@ function sendSOSAlert(latitude, longitude) {
     });
 }
 
-const shareLocationButton = document.getElementById('shareLocationButton');
+
 shareLocationButton.addEventListener('click', () => {
     navigator.geolocation.getCurrentPosition(
         (position) => {

@@ -1,49 +1,184 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+/* Global Styles */
+
+* {
+    box-sizing: border-box;
     margin: 0;
-}
-
-.container {
-    text-align: center;
-    background-color: white;
+    padding: 0;
+  }
+  
+  body {
+    font-family: 'Arial', sans-serif;
+    background-image: linear-gradient(to bottom, #f8f8f8, #f2f2f2);
+    margin: 0;
     padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-#sosButton {
-    background-color: red;
+    transition: background-color 0.3s ease;
+  }
+  
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+    animation: box-shadow 2s infinite;
+  }
+  
+  @keyframes box-shadow {
+    0% {
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    50% {
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    }
+    100% {
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+  }
+  
+  /* Emergency Section */
+  
+  .emergency-section {
+    text-align: center;
+    padding: 20px;
+    border-bottom: 2px solid #eee;
+    margin-bottom: 30px;
+  }
+  
+  #sosButton {
+    background: #ff4444;
     color: white;
+    padding: 18px 35px;
+    font-size: 1.2em;
     border: none;
-    padding: 15px 30px;
-    font-size: 18px;
+    border-radius: 50px;
     cursor: pointer;
-    border-radius: 5px;
-}
-
-#sosButton:hover {
-    background-color: darkred;
-}
-
-#locationText {
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(255, 68, 68, 0.2);
+  }
+  
+  #sosButton:hover {
+    background: #cc0000;
+    transform: scale(1.05);
+  }
+  
+  #locationText {
     margin: 20px 0;
-}
-
-#shareLocationButton {
-    background-color: green;
+    color: #666;
+    font-size: 0.9em;
+  }
+  
+  #shareLocationButton {
+    background: #00c851;
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  #shareLocationButton:hover {
+    background: #007e33;
+  }
+  
+  /* Route Planning Section */
+  
+  .route-planning {
+    margin-top: 30px;
+  }
+  
+  .route-inputs {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 20px;
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  input[type="text"] {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+  }
+  
+  #getRouteButton {
+    background: #4285f4;
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  #getRouteButton:hover {
+    background: #357abd;
+  }
+  
+  #mapContainer {
+    height: 400px;
+    border-radius: 12px;
+    margin: 20px 0;
+    border: 1px solid #eee;
+  }
+  
+  #routeOptions {
+    margin-top: 20px;
+  }
+  
+  .route-option {
+    padding: 15px;
+    margin: 10px 0;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .route-option button {
+    background: #34a853;
     color: white;
     border: none;
-    padding: 10px 20px;
-    font-size: 16px;
+    padding: 8px 16px;
+    border-radius: 20px;
     cursor: pointer;
-    border-radius: 5px;
-}
-
-#shareLocationButton:hover {
-    background-color: darkgreen;
-}
+  }
+  
+  /* Responsive Design */
+  
+  @media (max-width: 768px) {
+    .container {
+      max-width: 600px;
+    }
+    .route-inputs {
+      grid-template-columns: 1fr;
+    }
+    #mapContainer {
+      height: 300px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .container {
+      max-width: 400px;
+    }
+    .route-inputs {
+      grid-template-columns: 1fr;
+    }
+    #mapContainer {
+      height: 250px;
+    }
+    #sosButton {
+      padding: 12px 20px;
+    }
+    #shareLocationButton {
+      padding: 10px 15px;
+    }
+    #getRouteButton {
+      padding: 10px 15px;
+    }
+  }
