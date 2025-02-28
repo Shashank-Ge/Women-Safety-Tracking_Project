@@ -64,3 +64,4 @@ function shareLiveLocation(latitude, longitude) {
     const locationLink = `https://maps.google.com/?q=${latitude},${longitude}`;
     alert(`Share this link with your contacts: ${locationLink}`);
 }
+document.head.innerHTML += '<link rel="icon" type="image/png" href="logo.png">';
