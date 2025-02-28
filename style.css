@@ -24,7 +24,7 @@ body {
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
-h1, h3 {
+h1, h2 {
     color: #ffffff;
     text-align: center;
     margin-bottom: 30px;
@@ -88,7 +88,7 @@ h1 {
 #locationText {
     margin: 25px 0;
     font-size: 1rem;
-    color: rgba(255, 255, 255, 0.9);
+    color: rgba(2, 2, 2, 0.9);
 }
 
 #shareLocationButton {
@@ -132,7 +132,7 @@ input[type="text"] {
     border-radius: 10px;
     font-size: 1rem;
     background: rgb(212 198 198);
-    color: #b83a3a;
+    color: #070707;
     transition: all 0.3sease;
 }
 
@@ -176,7 +176,7 @@ input[type="text"]:focus {
 .route-option {
     padding: 20px;
     margin: 15px 0;
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(44, 34, 34, 0.7);
     border-radius: 10px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     display: flex;
