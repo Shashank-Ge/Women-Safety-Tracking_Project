@@ -359,3 +359,22 @@ button:active {
     transform: translateY(1px);
     box-shadow: none;
 }
+
+/* Add marker animation */
+@keyframes marker-pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+/* Style for current location marker */
+.gm-style-iw {
+    background: #4285f4 !important;
+    color: white !important;
+    border-radius: 8px !important;
+    padding: 10px !important;
+}
+
+.current-location-marker {
+    animation: marker-pulse 1.5s infinite;
+}
