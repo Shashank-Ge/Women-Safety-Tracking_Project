@@ -3,8 +3,12 @@ const locationText = document.getElementById('locationText');
 const sosButton = document.getElementById('sosButton');
 const shareLocationButton = document.getElementById('shareLocationButton');
 
-// Route Planning Elements
+// Map Elements
 let map, directionsService, directionsRenderer;
+let currentLocationMarker = null;
+let navigationPositionMarker = null;
+
+// Route Planning Elements
 const startInput = document.getElementById('startInput');
 const endInput = document.getElementById('endInput');
 const getRouteButton = document.getElementById('getRouteButton');
@@ -21,82 +25,47 @@ const exitNavButton = document.getElementById('exitNavButton');
 let currentRoute = null;
 let currentStep = 0;
 let navigationWatchId = null;
-let positionMarker = null;
 
 // Initialize Geolocation and Map
 if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
-        (position) => {
-            const latitude = position.coords.latitude;
-            const longitude = position.coords.longitude;
-            
-            locationText.textContent = `Current Location: ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`;
-            initMap(latitude, longitude);
-            startInput.value = `${latitude.toFixed(4)}, ${longitude.toFixed(4)}`;
-        },
-        (error) => {
-            locationText.textContent = 'Error getting location';
-            initMap();
-        }
+        position => initializeApp(position),
+        error => handleGeoError(error)
     );
 } else {
     locationText.textContent = 'Geolocation not supported';
 }
 
-// SOS Emergency Functionality
-let sosTimeout;
-sosButton.addEventListener('mousedown', () => {
-    console.log('SOS button pressed');
-    sosTimeout = setTimeout(() => {
-        console.log('SOS button held for 5 seconds');
-        alert('SOS button held for 3 seconds. SOS is working!');
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                const latitude = position.coords.latitude;
-                const longitude = position.coords.longitude;
-                sendSOSAlert(latitude, longitude);
-            },
-            (error) => {
-                alert('Error getting location');
-            }
-        );
-    }, 3000); 
-});
+function initializeApp(position) {
+    const latitude = position.coords.latitude;
+    const longitude = position.coords.longitude;
+    
+    locationText.textContent = `Current Location: ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`;
+    initMap(latitude, longitude);
+    startInput.value = `${latitude.toFixed(4)}, ${longitude.toFixed(4)}`;
 
-sosButton.addEventListener('mouseup', () => {
-    console.log('SOS button released');
-    clearTimeout(sosTimeout);
-});
-
-
-function sendSOSAlert(lat, lng) {
-    const message = `SOS! My location: https://maps.google.com/?q=${lat},${lng}`;
-    database.ref('alerts').push({
-        latitude: lat,
-        longitude: lng,
-        message,
-        timestamp: new Date().toISOString()
-    }).then(() => alert('SOS sent!'))
-      .catch(() => alert('SOS failed'));
-}
-
-// Live Location Sharing
-shareLocationButton.addEventListener('click', () => {
-    navigator.geolocation.getCurrentPosition(
-        (position) => {
-            const { latitude, longitude } = position.coords;
-            shareLiveLocation(latitude, longitude);
+    // Create current location marker
+    currentLocationMarker = new google.maps.Marker({
+        position: { lat: latitude, lng: longitude },
+        map: map,
+        title: "Your Current Location",
+        icon: {
+            path: google.maps.SymbolPath.CIRCLE,
+            scale: 8,
+            fillColor: "#4285F4",
+            fillOpacity: 1,
+            strokeColor: "#FFFFFF",
+            strokeWeight: 2
         },
-        (error) => alert('Location error')
-    );
-});
-
-function shareLiveLocation(lat, lng) {
-    const link = `https://maps.google.com/?q=${lat},${lng}`;
-    alert(`Share this link: ${link}`);
+        animation: google.maps.Animation.DROP
+    });
 }
 
-// Map and Route Features
+function handleGeoError(error) {
+    locationText.textContent = 'Error getting location';
+    initMap();
+}
+
 function initMap(lat = 12.9716, lng = 77.5946) {
     map = new google.maps.Map(document.getElementById('mapContainer'), {
         center: { lat, lng },
@@ -105,6 +74,23 @@ function initMap(lat = 12.9716, lng = 77.5946) {
         streetViewControl: false,
         mapTypeId: 'roadmap'
     });
+
+    // Default location marker
+    if (lat === 12.9716 && lng === 77.5946) {
+        currentLocationMarker = new google.maps.Marker({
+            position: { lat, lng },
+            map: map,
+            title: "Default Location",
+            icon: {
+                path: google.maps.SymbolPath.CIRCLE,
+                scale: 8,
+                fillColor: "#EA4335",
+                fillOpacity: 1,
+                strokeColor: "#FFFFFF",
+                strokeWeight: 2
+            }
+        });
+    }
 
     directionsService = new google.maps.DirectionsService();
     directionsRenderer = new google.maps.DirectionsRenderer({
@@ -123,40 +109,50 @@ function initMap(lat = 12.9716, lng = 77.5946) {
     });
 }
 
-// Travel Mode Handling
-travelModeButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-        travelModeButtons.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        currentTravelMode = btn.dataset.mode;
-        if(endInput.value) calculateRoute();
-    });
+// SOS Functionality
+let sosTimeout;
+sosButton.addEventListener('mousedown', () => {
+    sosTimeout = setTimeout(() => {
+        navigator.geolocation.getCurrentPosition(
+            position => sendSOSAlert(position.coords.latitude, position.coords.longitude),
+            error => alert('Error getting location')
+        );
+    }, 3000);
 });
 
-// Avoidance Options
-avoidOptions.forEach(opt => {
-    opt.addEventListener('change', () => {
-        if(opt.id === 'avoidHighways') avoidHighways = opt.checked;
-        if(opt.id === 'avoidTolls') avoidTolls = opt.checked;
-        if(endInput.value) calculateRoute();
-    });
+sosButton.addEventListener('mouseup', () => clearTimeout(sosTimeout));
+
+function sendSOSAlert(lat, lng) {
+    database.ref('alerts').push({
+        latitude: lat,
+        longitude: lng,
+        timestamp: new Date().toISOString()
+    }).then(() => alert('SOS sent!'))
+      .catch(() => alert('SOS failed'));
+}
+
+// Live Location Sharing
+shareLocationButton.addEventListener('click', () => {
+    navigator.geolocation.getCurrentPosition(
+        position => shareLiveLocation(position.coords.latitude, position.coords.longitude),
+        error => alert('Location error')
+    );
 });
 
-// Route Calculation
+function shareLiveLocation(lat, lng) {
+    const link = `https://maps.google.com/?q=${lat},${lng}`;
+    alert(`Share this link: ${link}\nLocation will update every 60 seconds`);
+}
+
+// Route Calculation and Display
+getRouteButton.addEventListener('click', calculateRoute);
+
 function calculateRoute() {
     const request = {
         origin: startInput.value,
         destination: endInput.value,
         travelMode: currentTravelMode,
         provideRouteAlternatives: true,
-        drivingOptions: currentTravelMode === 'DRIVING' ? {
-            departureTime: new Date(),
-            trafficModel: 'bestguess'
-        } : undefined,
-        transitOptions: currentTravelMode === 'TRANSIT' ? {
-            modes: ['BUS', 'RAIL'],
-            routingPreference: 'FEWER_TRANSFERS'
-        } : undefined,
         unitSystem: google.maps.UnitSystem.METRIC
     };
 
@@ -171,7 +167,6 @@ function calculateRoute() {
     });
 }
 
-// Display Route Options
 function showRouteOptions(routes) {
     const routeOptions = document.getElementById('routeOptions');
     routeOptions.innerHTML = `
@@ -202,7 +197,6 @@ function showRouteOptions(routes) {
     });
 }
 
-// Enhanced Safety Calculation
 function calculateSafetyScore(route) {
     const modeFactors = {
         WALKING: { distance: 0.4, lighting: 0.4, traffic: 0.2 },
@@ -226,9 +220,16 @@ function startNavigation(route) {
     document.getElementById('routeOptions').style.display = 'none';
     navigationPanel.style.display = 'block';
     currentStep = 0;
-    displayNavigationStep(route.legs[0].steps[currentStep]);
+    currentRoute = route;
+    
+    if(currentLocationMarker) currentLocationMarker.setMap(null);
+    
     startLocationTracking();
+    displayNavigationStep(currentRoute.legs[0].steps[currentStep]);
     map.setZoom(18);
+    
+    nextStepButton.onclick = goToNextStep;
+    exitNavButton.onclick = exitNavigation;
 }
 
 function displayNavigationStep(step) {
@@ -241,8 +242,8 @@ function displayNavigationStep(step) {
         </div>
     `;
 
-    if(currentStep < route.legs[0].steps.length - 1) {
-        const nextStep = route.legs[0].steps[currentStep + 1].instructions.replace(/<[^>]*>/g, '');
+    if(currentStep < currentRoute.legs[0].steps.length - 1) {
+        const nextStep = currentRoute.legs[0].steps[currentStep + 1].instructions.replace(/<[^>]*>/g, '');
         navigationInstructions.innerHTML += `
             <div class="next-instruction">
                 <h5>Next:</h5>
@@ -252,40 +253,108 @@ function displayNavigationStep(step) {
     }
 }
 
+function goToNextStep() {
+    const steps = currentRoute.legs[0].steps;
+    
+    if (currentStep < steps.length - 1) {
+        currentStep++;
+        displayNavigationStep(steps[currentStep]);
+        const newPosition = steps[currentStep].start_location;
+        map.panTo(newPosition);
+    } else {
+        navigationInstructions.innerHTML = `
+            <div class="destination-reached">
+                <h3>Destination Reached!</h3>
+                <p>You've arrived safely</p>
+            </div>
+        `;
+        stopLocationTracking();
+    }
+}
+
+function checkRouteProgress(position) {
+    if (!currentRoute) return;
+
+    const steps = currentRoute.legs[0].steps;
+    const currentStepEnd = steps[currentStep].end_location;
+    
+    const distance = google.maps.geometry.spherical.computeDistanceBetween(
+        new google.maps.LatLng(position.lat, position.lng),
+        currentStepEnd
+    );
+
+    if (distance < 20) goToNextStep();
+}
+
 // Location Tracking
 function startLocationTracking() {
     if(navigationWatchId) navigator.geolocation.clearWatch(navigationWatchId);
     
     navigationWatchId = navigator.geolocation.watchPosition(
-        position => {
-            const pos = { lat: position.coords.latitude, lng: position.coords.longitude };
-            updatePositionMarker(pos);
-            checkRouteProgress(pos);
-        },
+        position => updatePosition(position),
         error => console.error("Tracking error:", error),
-        { enableHighAccuracy: true, maximumAge: 0, timeout: 5000 }
+        { enableHighAccuracy: true }
     );
 }
 
-function updatePositionMarker(position) {
-    if(!positionMarker) {
-        positionMarker = new google.maps.Marker({
-            position,
-            map,
+function updatePosition(position) {
+    const pos = { 
+        lat: position.coords.latitude, 
+        lng: position.coords.longitude 
+    };
+    
+    if(!navigationPositionMarker) {
+        navigationPositionMarker = new google.maps.Marker({
+            position: pos,
+            map: map,
             icon: {
                 path: google.maps.SymbolPath.CIRCLE,
                 scale: 8,
-                fillColor: "#4285F4",
-                strokeColor: "#FFF"
+                fillColor: "#34A853",
+                fillOpacity: 1,
+                strokeColor: "#FFFFFF",
+                strokeWeight: 2
             }
         });
     } else {
-        positionMarker.setPosition(position);
+        navigationPositionMarker.setPosition(pos);
     }
-    map.panTo(position);
+    
+    map.panTo(pos);
+    checkRouteProgress(pos);
+}
+
+function exitNavigation() {
+    stopLocationTracking();
+    navigationPanel.style.display = 'none';
+    document.getElementById('routeOptions').style.display = 'block';
+    map.setZoom(14);
+    
+    if(currentLocationMarker) currentLocationMarker.setMap(map);
+    if(navigationPositionMarker) {
+        navigationPositionMarker.setMap(null);
+        navigationPositionMarker = null;
+    }
+    
+    currentRoute = null;
+    currentStep = 0;
+    
+    nextStepButton.onclick = null;
+    exitNavButton.onclick = null;
+}
+
+function stopLocationTracking() {
+    if (navigationWatchId !== null) {
+        navigator.geolocation.clearWatch(navigationWatchId);
+        navigationWatchId = null;
+    }
 }
 
 // Helper Functions
+function addTrafficLayer() {
+    new google.maps.TrafficLayer().setMap(map);
+}
+
 function calculateDistance(lat1, lon1, lat2, lon2) {
     const R = 6371e3;
     const φ1 = lat1 * Math.PI/180;
@@ -300,98 +369,15 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
     return R * c;
 }
 
-// Traffic Layer
-function addTrafficLayer() {
-    new google.maps.TrafficLayer().setMap(map);
-}
-document.head.innerHTML += '<link rel="icon" type="image/png" href="logo.png">';
+// Travel Mode Handling
+travelModeButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+        travelModeButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentTravelMode = btn.dataset.mode;
+        if(endInput.value) calculateRoute();
+    });
+});
 
-// Update the startNavigation function
-function startNavigation(route) {
-    document.getElementById('routeOptions').style.display = 'none';
-    navigationPanel.style.display = 'block';
-    currentStep = 0;
-    currentRoute = route; // Ensure currentRoute is set
-    displayNavigationStep(currentRoute.legs[0].steps[currentStep]);
-    startLocationTracking();
-    map.setZoom(18);
-    
-    // Add fresh event listeners
-    nextStepButton.onclick = goToNextStep;
-    exitNavButton.onclick = exitNavigation;
-}
-
-// Update the displayNavigationStep function
-function displayNavigationStep(step) {
-    const instruction = step.instructions.replace(/<[^>]*>/g, '');
-    navigationInstructions.innerHTML = `
-        <div class="current-instruction">
-            <h4>Step ${currentStep + 1}</h4>
-            <p>${instruction}</p>
-            <p class="distance-info">${step.distance.text}</p>
-        </div>
-    `;
-
-    // Fix the reference to currentRoute
-    if(currentStep < currentRoute.legs[0].steps.length - 1) {
-        const nextStep = currentRoute.legs[0].steps[currentStep + 1].instructions.replace(/<[^>]*>/g, '');
-        navigationInstructions.innerHTML += `
-            <div class="next-instruction">
-                <h5>Next:</h5>
-                <p>${nextStep}</p>
-            </div>
-        `;
-    }
-}
-
-// Add the missing goToNextStep function
-function goToNextStep() {
-    const steps = currentRoute.legs[0].steps;
-    
-    if (currentStep < steps.length - 1) {
-        currentStep++;
-        displayNavigationStep(steps[currentStep]);
-        
-        // Center map on the new step
-        const newPosition = steps[currentStep].start_location;
-        map.panTo(newPosition);
-    } else {
-        navigationInstructions.innerHTML = `
-            <div class="destination-reached">
-                <h3>Destination Reached!</h3>
-                <p>You've arrived safely</p>
-            </div>
-        `;
-        stopLocationTracking();
-    }
-}
-
-// Update the exitNavigation function
-function exitNavigation() {
-    stopLocationTracking();
-    navigationPanel.style.display = 'none';
-    document.getElementById('routeOptions').style.display = 'block';
-    map.setZoom(14);
-    directionsRenderer.setDirections(directionsRenderer.getDirections());
-    
-    // Reset navigation state
-    currentRoute = null;
-    currentStep = 0;
-    
-    // Clear existing markers
-    if(positionMarker) {
-        positionMarker.setMap(null);
-        positionMarker = null;
-    }
-    
-    // Remove event listeners
-    nextStepButton.onclick = null;
-    exitNavButton.onclick = null;
-}
-
-function stopLocationTracking() {
-    if (navigationWatchId !== null) {
-        navigator.geolocation.clearWatch(navigationWatchId);
-        navigationWatchId = null;
-    }
-}
+// Initialize
+window.initMap = initMap;
