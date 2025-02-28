@@ -29,10 +29,25 @@
                 <input type="text" id="endInput" placeholder="Enter destination">
                 <button id="getRouteButton">Get Safe Route</button>
             </div>
+
+            <div class="travel-mode-selector">
+                <button class="travel-mode-btn active" data-mode="WALKING">
+                    <i class="fas fa-walking"></i> Walk
+                </button>
+                <button class="travel-mode-btn" data-mode="DRIVING">
+                    <i class="fas fa-car"></i> Drive
+                </button>
+                <button class="travel-mode-btn" data-mode="BICYCLING">
+                    <i class="fas fa-bicycle"></i> Bike
+                </button>
+                <button class="travel-mode-btn" data-mode="TRANSIT">
+                    <i class="fas fa-bus"></i> Transit
+                </button>
+            </div>
             <div id="mapContainer"></div>
             <div id="routeOptions"></div>
             
-            <!-- Navigation Panel (New) -->
+            
             <div id="navigationPanel" style="display: none;">
                 <div id="navigationInstructions"></div>
                 <div class="navigation-controls">
@@ -42,6 +57,9 @@
             </div>
         </div>
     </div>
+
+        <!-- Updated HTML (remove avoid-options div) -->
+    
 
     <script src="firebase.js"></script>
     <script src="script.js"></script>

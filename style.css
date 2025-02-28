@@ -1,3 +1,5 @@
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css');
+
 body {
     font-family: 'Poppins', sans-serif;
     margin: 0;
@@ -245,5 +247,116 @@ input[type="text"]:focus {
     }
 }
 
-/* Add Font Awesome for icons */
-@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css');
+
+.travel-mode-selector {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+
+}
+
+button {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Primary Buttons */
+#sosButton, #shareLocationButton, #getRouteButton {
+    background: var(--primary-color);
+    color: white;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+#sosButton {
+    --primary-color: #ff4444;
+    padding: 16px 32px;
+    font-size: 1.1em;
+}
+
+#sosButton:hover {
+    background: #cc0000;
+    transform: translateY(-2px);
+}
+
+#shareLocationButton {
+    --primary-color: #00c851;
+}
+
+#getRouteButton {
+    --primary-color: #4285f4;
+}
+
+.route-header {
+    display: flex;
+    gap: 235px;
+}
+
+.route-info {
+    display: contents;
+}
+
+.travel-mode-btn {
+    background: #f0f2f5;
+    color: #5f6368;
+    border: 2px solid #dadce0;
+    padding: 10px 15px;
+    font-size: 0.9em;
+}
+
+.travel-mode-btn.active {
+    background: #e8f0fe;
+    color: #1967d2;
+    border-color: #1967d2;
+}
+
+.travel-mode-btn:hover {
+    background: #e3e5e8;
+}
+
+/* Route Selection Buttons */
+.select-route-btn {
+    background: #34a853;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+}
+
+.select-route-btn:hover {
+    background: #2d9148;
+}
+
+/* Navigation Buttons */
+#nextStepButton, #exitNavButton {
+    background: #4285f4;
+    color: white;
+    margin: 8px;
+}
+
+#nextStepButton:hover, #exitNavButton:hover {
+    background: #357abd;
+}
+
+/* Icon Styling */
+button i {
+    font-size: 1.2em;
+    vertical-align: middle;
+}
+
+/* Hover Effects */
+button:not(.active):hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+/* Active State */
+button:active {
+    transform: translateY(1px);
+    box-shadow: none;
+}
