@@ -49,7 +49,7 @@ sosButton.addEventListener('mousedown', () => {
     console.log('SOS button pressed');
     sosTimeout = setTimeout(() => {
         console.log('SOS button held for 5 seconds');
-        alert('SOS button held for 5 seconds. SOS is working!');
+        alert('SOS button held for 3 seconds. SOS is working!');
         navigator.geolocation.getCurrentPosition(
             (position) => {
                 const latitude = position.coords.latitude;
@@ -207,7 +207,6 @@ function calculateSafetyScore(route) {
     const modeFactors = {
         WALKING: { distance: 0.4, lighting: 0.4, traffic: 0.2 },
         DRIVING: { distance: 0.2, traffic: 0.6, complexity: 0.2 },
-        BICYCLING: { distance: 0.3, elevation: 0.4, traffic: 0.3 },
         TRANSIT: { distance: 0.25, transfers: 0.5, crowd: 0.25 }
     };
     
