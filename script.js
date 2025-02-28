@@ -13,7 +13,6 @@ const getRouteButton = document.getElementById('getRouteButton');
 const travelModeButtons = document.querySelectorAll('.travel-mode-btn');
 let currentTravelMode = 'WALKING';
 
-
 // Navigation Elements
 const navigationPanel = document.getElementById('navigationPanel');
 const navigationInstructions = document.getElementById('navigationInstructions');
@@ -45,15 +44,30 @@ if (navigator.geolocation) {
 }
 
 // SOS Emergency Functionality
-sosButton.addEventListener('click', () => {
-    navigator.geolocation.getCurrentPosition(
-        (position) => {
-            const { latitude, longitude } = position.coords;
-            sendSOSAlert(latitude, longitude);
-        },
-        (error) => alert('Error getting location')
-    );
+let sosTimeout;
+sosButton.addEventListener('mousedown', () => {
+    console.log('SOS button pressed');
+    sosTimeout = setTimeout(() => {
+        console.log('SOS button held for 5 seconds');
+        alert('SOS button held for 5 seconds. SOS is working!');
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+                sendSOSAlert(latitude, longitude);
+            },
+            (error) => {
+                alert('Error getting location');
+            }
+        );
+    }, 3000); 
 });
+
+sosButton.addEventListener('mouseup', () => {
+    console.log('SOS button released');
+    clearTimeout(sosTimeout);
+});
+
 
 function sendSOSAlert(lat, lng) {
     const message = `SOS! My location: https://maps.google.com/?q=${lat},${lng}`;
@@ -293,9 +307,6 @@ function addTrafficLayer() {
 }
 document.head.innerHTML += '<link rel="icon" type="image/png" href="logo.png">';
 
-
-
-
 // Update the startNavigation function
 function startNavigation(route) {
     document.getElementById('routeOptions').style.display = 'none';
@@ -378,6 +389,7 @@ function exitNavigation() {
     nextStepButton.onclick = null;
     exitNavButton.onclick = null;
 }
+
 function stopLocationTracking() {
     if (navigationWatchId !== null) {
         navigator.geolocation.clearWatch(navigationWatchId);
