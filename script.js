@@ -84,6 +84,7 @@ function shareLiveLocation(latitude, longitude) {
     alert(`Share this link with your contacts: ${locationLink}`);
 }
 
+
 // Safe Route Suggestions Feature
 function initMap(lat = 12.9716, lng = 77.5946) { // Default coordinates
     map = new google.maps.Map(document.getElementById('mapContainer'), {
@@ -162,3 +163,6 @@ function selectRoute(routeIndex) {
     alert(`Route ${routeIndex + 1} selected! Starting navigation...`);
     // Add navigation logic here
 }
+=======
+document.head.innerHTML += '<link rel="icon" type="image/png" href="logo.png">';
+
