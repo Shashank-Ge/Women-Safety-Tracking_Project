@@ -1,184 +1,249 @@
-/* Global Styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 20px;
+    background: linear-gradient(rgba(133, 98, 98, 0.7), rgba(44, 34, 34, 0.7)), url('backgrounds.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    color: #ffffff;
+    min-height: 100vh;
+}
 
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-  
-  body {
-    font-family: 'Arial', sans-serif;
-    background-image: linear-gradient(to bottom, #f8f8f8, #f2f2f2);
-    margin: 0;
-    padding: 20px;
-    transition: background-color 0.3s ease;
-  }
-  
-  .container {
-    max-width: 800px;
+.container {
+    max-width: 1000px;
     margin: 0 auto;
-    background: white;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: box-shadow 0.3s ease;
-    animation: box-shadow 2s infinite;
-  }
-  
-  @keyframes box-shadow {
-    0% {
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-    50% {
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-    }
-    100% {
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-  }
-  
-  /* Emergency Section */
-  
-  .emergency-section {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 40px;
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+h1, h3 {
+    color: #ffffff;
     text-align: center;
-    padding: 20px;
-    border-bottom: 2px solid #eee;
     margin-bottom: 30px;
-  }
-  
-  #sosButton {
-    background: #ff4444;
+    font-weight: 600;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 40px;
+}
+
+/* Emergency Section */
+.emergency-section {
+    text-align: center;
+    padding: 30px;
+    margin-bottom: 40px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#sosButton {
+    background: #ff4757;
     color: white;
-    padding: 18px 35px;
-    font-size: 1.2em;
+    padding: 25px 50px;
+    font-size: 1.4rem;
     border: none;
     border-radius: 50px;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 6px rgba(255, 68, 68, 0.2);
-  }
-  
-  #sosButton:hover {
-    background: #cc0000;
-    transform: scale(1.05);
-  }
-  
-  #locationText {
-    margin: 20px 0;
-    color: #666;
-    font-size: 0.9em;
-  }
-  
-  #shareLocationButton {
-    background: #00c851;
+    box-shadow: 0 8px 15px rgba(255, 71, 87, 0.3);
+    position: relative;
+    overflow: hidden;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+#sosButton::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: rgba(255, 255, 255, 0.1);
+    transform: rotate(45deg);
+    transition: all 0.5s ease;
+}
+
+#sosButton:hover {
+    background: #ff6b81;
+    transform: scale(1.05) translateY(-3px);
+    box-shadow: 0 12px 25px rgba(255, 71, 87, 0.4);
+}
+
+#sosButton:active {
+    transform: scale(0.95);
+}
+
+#locationText {
+    margin: 25px 0;
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+#shareLocationButton {
+    background: #2ed573;
     color: white;
-    padding: 12px 25px;
+    padding: 15px 35px;
     border: none;
-    border-radius: 25px;
+    border-radius: 30px;
     cursor: pointer;
-    transition: background 0.3s ease;
-  }
-  
-  #shareLocationButton:hover {
-    background: #007e33;
-  }
-  
-  /* Route Planning Section */
-  
-  .route-planning {
-    margin-top: 30px;
-  }
-  
-  .route-inputs {
-    display: grid;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
     gap: 10px;
-    margin-bottom: 20px;
+}
+
+#shareLocationButton:hover {
+    background: #7bed9f;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(46, 213, 115, 0.3);
+}
+
+/* Route Planning Section */
+.route-planning {
+    margin-top: 40px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 30px;
+    border-radius: 15px;
+}
+
+.route-inputs {
+    display: grid;
+    gap: 15px;
+    margin-bottom: 25px;
     grid-template-columns: repeat(2, 1fr);
-  }
-  
-  input[type="text"] {
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 14px;
-  }
-  
-  #getRouteButton {
-    background: #4285f4;
-    color: white;
-    padding: 12px 25px;
-    border: none;
-    border-radius: 25px;
-    cursor: pointer;
-    transition: background 0.3s ease;
-  }
-  
-  #getRouteButton:hover {
-    background: #357abd;
-  }
-  
-  #mapContainer {
-    height: 400px;
-    border-radius: 12px;
-    margin: 20px 0;
-    border: 1px solid #eee;
-  }
-  
-  #routeOptions {
-    margin-top: 20px;
-  }
-  
-  .route-option {
+}
+
+input[type="text"] {
     padding: 15px;
-    margin: 10px 0;
-    background: #f8f9fa;
-    border-radius: 8px;
-    border: 1px solid #eee;
+    border: 1px solid rgb(255 255 255 / 40%);
+    border-radius: 10px;
+    font-size: 1rem;
+    background: rgb(212 198 198);
+    color: #b83a3a;
+    transition: all 0.3sease;
+}
+
+input[type="text"]:focus {
+    outline: none;
+    border-color: #2ed573;
+    box-shadow: 0 0 0 3px rgba(46, 213, 115, 0.2);
+}
+
+#getRouteButton {
+    background: #3742fa;
+    color: white;
+    padding: 15px 35px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    grid-column: span 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+#getRouteButton:hover {
+    background: #5352ed;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(55, 66, 250, 0.3);
+}
+
+#mapContainer {
+    height: 450px;
+    border-radius: 15px;
+    margin: 25px 0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.route-option {
+    padding: 20px;
+    margin: 15px 0;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     display: flex;
     justify-content: space-between;
     align-items: center;
-  }
-  
-  .route-option button {
-    background: #34a853;
+    transition: all 0.3s ease;
+}
+
+.route-option:hover {
+    transform: translateX(10px);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.route-option button {
+    background: #2ed573;
     color: white;
     border: none;
-    padding: 8px 16px;
-    border-radius: 20px;
+    padding: 10px 20px;
+    border-radius: 25px;
     cursor: pointer;
-  }
-  
-  /* Responsive Design */
-  
-  @media (max-width: 768px) {
+    transition: all 0.3s ease;
+}
+
+.route-option button:hover {
+    background: #7bed9f;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
     .container {
-      max-width: 600px;
+        padding: 25px;
+        margin: 15px;
     }
+
     .route-inputs {
-      grid-template-columns: 1fr;
+        grid-template-columns: 1fr;
     }
-    #mapContainer {
-      height: 300px;
-    }
-  }
-  
-  @media (max-width: 480px) {
-    .container {
-      max-width: 400px;
-    }
-    .route-inputs {
-      grid-template-columns: 1fr;
-    }
-    #mapContainer {
-      height: 250px;
-    }
-    #sosButton {
-      padding: 12px 20px;
-    }
-    #shareLocationButton {
-      padding: 10px 15px;
-    }
+
     #getRouteButton {
-      padding: 10px 15px;
+        grid-column: span 1;
     }
-  }
+
+    #mapContainer {
+        height: 350px;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+
+    .container {
+        padding: 20px;
+    }
+
+    #sosButton {
+        padding: 20px 40px;
+        font-size: 1.2rem;
+    }
+
+    #mapContainer {
+        height: 300px;
+    }
+}
+
+/* Add Font Awesome for icons */
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css');
