@@ -12,17 +12,42 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDv0leB0g4StU2y-3aXhBpO0g0Bu-qhy34&libraries=places,directions&callback=initMap" async defer></script>
 </head>
 <body>
-    <div class="container">
-        <h1>Women Safety Alert System</h1>
-        
-        <!-- Existing SOS Section -->
-        <div class="emergency-section">
-            <button id="sosButton">SOS</button>
-            <p id="locationText">Current Location: Not available</p>
-            <button id="shareLocationButton">Share Live Location</button>
+    <header>
+        <h1>Sahaya</h1>
+        <h3>Your Digital Shield, Always Activated</h3>
+    </header>
+
+
+
+      <div class="main-container">
+        <!-- Left Panel -->
+        <div class="left-panel">
+            
+            <div class="emergency-section">
+                <button id="sosButton">SOS</button>
+                <p id="locationText">Current Location: Not available</p>
+                <button id="shareLocationButton">Share Live Location</button>
+            </div>
+
+            <div class="contact-details">
+                <h4>Emergency Contacts</h4>
+                <div class="contact-grid">
+                    <div class="contact-card">
+                        <i class="fa-solid fa-building-shield"></i>
+                        <span>Police: 100</span>
+                        <button class="quick-call">Call</button>
+                    </div>
+                    <div class="contact-card">
+                        <i class="fas fa-ambulance"></i>
+                        <span>Ambulance: 108</span>
+                        <button class="quick-call">Call</button>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <!-- New Route Planning Section -->
+     
+       <!-- New Route Planning Section -->
         <div class="route-planning">
             <h2>Safe Route Planner</h2>
             <div class="route-inputs">
@@ -30,6 +55,7 @@
                 <input type="text" id="endInput" placeholder="Enter destination">
                 <button id="getRouteButton">Get Safe Route</button>
             </div>
+          
 
             <div class="travel-mode-selector">
                 <button class="travel-mode-btn active" data-mode="WALKING">
@@ -55,12 +81,7 @@
             </div>
 
         </div>
-    </div>
-
-    
-    
-
-    <script src="firebase.js"></script>
+<script src="firebase.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
