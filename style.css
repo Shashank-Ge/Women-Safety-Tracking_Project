@@ -397,13 +397,13 @@ input[type="text"]:focus {
 }
 
 .route-option {
-    background: rgba(255, 255, 255, 0.08);
+    background: rgb(255 255 255 / 41%);
     padding: 20px;
     border-radius: 12px;
     margin-bottom: 15px;
-    transition: all 0.3s ease;
+    transition: all 0.3sease;
     cursor: pointer;
-    border-left: 4px solid transparent;
+    border-left: 4px solid #000000a1;
 }
 
 .route-option:hover {
@@ -435,8 +435,8 @@ input[type="text"]:focus {
     display: inline-block;
     padding: 5px 12px;
     border-radius: 20px;
-    background: rgba(255, 140, 0, 0.2);
-    color: #ff8c00;
+    background: rgba(255, 140, 0, 30%);
+    color: #060606;
     font-weight: 600;
     font-size: 0.9rem;
 }
@@ -476,7 +476,9 @@ input[type="text"]:focus {
     color: #fff;
     font-weight: 600;
 }
-
+.route-info {
+    display: contents;
+}
 /* Responsive Adjustments */
 @media (max-width: 768px) {
     .route-option {
