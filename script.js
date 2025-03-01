@@ -379,5 +379,150 @@ travelModeButtons.forEach(btn => {
     });
 });
 
+
+// Emergency Call
+function makeEmergencyCall() {
+    const policeNumber = '100'; // Replace with the local police emergency number
+    emergencyCallLink.href = `tel:${policeNumber}`;
+    emergencyCallLink.click();
+    alert('Calling the nearest police station...');
+}
+ 
+// Auto Video Recording
+async function startRecording() {
+    try {
+        // Request both video and audio permissions
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        videoPreview.srcObject = stream;
+
+        // Initialize MediaRecorder with both video and audio tracks
+        mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm; codecs=vp9,opus' });
+
+        mediaRecorder.ondataavailable = (event) => {
+            if (event.data.size > 0) {
+                recordedChunks.push(event.data);
+            }
+        };
+
+        mediaRecorder.onstop = async () => {
+            const blob = new Blob(recordedChunks, { type: 'video/webm' });
+            await uploadRecording(blob); // Upload the recording to the server
+            recordedChunks = []; // Clear recorded chunks for the next recording
+        };
+
+        mediaRecorder.start();
+        recordingStatus.textContent = 'Recording: On (Video + Audio)';
+        alert('Recording started with audio!');
+    } catch (error) {
+        console.error('Error accessing camera or microphone:', error);
+        alert('Error accessing camera or microphone. Please allow permissions.');
+    }
+}
+async function startRecording() {
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        videoPreview.srcObject = stream;
+        audioPreview.srcObject = stream; // Set audio preview source
+        audioPreview.style.display = 'block'; // Show audio preview
+
+        mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm; codecs=vp9,opus' });
+
+        mediaRecorder.ondataavailable = (event) => {
+            if (event.data.size > 0) {
+                recordedChunks.push(event.data);
+            }
+        };
+
+        mediaRecorder.onstop = async () => {
+            const blob = new Blob(recordedChunks, { type: 'video/webm' });
+            await uploadRecording(blob);
+            recordedChunks = [];
+            audioPreview.style.display = 'none'; // Hide audio preview after recording stops
+            clearInterval(timerInterval); // Stop the timer
+            recordingStatus.textContent = 'Recording: Off'; // Reset status
+        };
+
+        mediaRecorder.start();
+        recordingStartTime = Date.now(); // Record the start time
+        startTimer(); // Start the timer
+        recordingStatus.textContent = 'Recording: On (00:00)'; // Initial timer display
+        alert('Recording started with audio!');
+    } catch (error) {
+        console.error('Error accessing camera or microphone:', error);
+        alert('Error accessing camera or microphone. Please allow permissions.');
+    }
+}
+// Stop Recording
+function stopRecording() {
+    if (mediaRecorder && mediaRecorder.state === 'recording') {
+        mediaRecorder.stop();
+        recordingStatus.textContent = 'Recording: Off';
+        alert('Recording stopped!');
+        audioPreview.style.display = 'none'; // Hide audio preview
+    }
+}
+
+// Upload Recording to Server
+async function uploadRecording(blob) {
+    const formData = new FormData();
+    formData.append('video', blob, 'emergency-recording.webm');
+
+    try {
+        const response = await fetch('/upload', {
+            method: 'POST',
+            body: formData,
+        });
+
+        if (response.ok) {
+            alert('Recording uploaded successfully!');
+        } else {
+            alert('Error uploading recording.');
+        }
+    } catch (error) {
+        console.error('Error uploading recording:', error);
+        alert('Error uploading recording.');
+    }
+}
+
+// Trigger Emergency
+function triggerEmergency() {
+    startRecording();
+    makeEmergencyCall();
+    document.getElementById('emergencyButton').style.display = 'none'; // Hide Emergency Button
+    document.getElementById('stopRecordingButton').style.display = 'block'; // Show Stop Recording Button
+}
+
+// Stop Recording Button
+stopRecordingButton.addEventListener('click', () => {
+    stopRecording();
+    document.getElementById('stopRecordingButton').style.display = 'none'; // Hide Stop Recording Button
+    document.getElementById('emergencyButton').style.display = 'block'; // Show Emergency Button
+});
+
+// Add event listener to the emergency button
+emergencyButton.addEventListener('click', triggerEmergency);
+
+let recordingStartTime; // To store the start time of recording
+let timerInterval; // To store the interval for updating the timer
+
+
+function startTimer() {
+    timerInterval = setInterval(() => {
+        const elapsedTime = Math.floor((Date.now() - recordingStartTime) / 1000); // Calculate elapsed time in seconds
+        const minutes = Math.floor(elapsedTime / 60).toString().padStart(2, '0'); // Format minutes
+        const seconds = (elapsedTime % 60).toString().padStart(2, '0'); // Format seconds
+        recordingStatus.textContent = `Recording: On (${minutes}:${seconds})`; // Update the timer display
+    }, 1000); // Update every second
+}
+
+function stopRecording() {
+    if (mediaRecorder && mediaRecorder.state === 'recording') {
+        mediaRecorder.stop();
+        clearInterval(timerInterval); // Stop the timer
+        recordingStatus.textContent = 'Recording: Off';
+        alert('Recording stopped!');
+        audioPreview.style.display = 'none'; // Hide audio preview
+    }
+}
 // Initialize
 window.initMap = initMap;

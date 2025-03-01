@@ -500,3 +500,51 @@ input[type="text"]:focus {
         justify-content: center;
     }
 }
+
+/* Video Recording Section */
+.video-section {
+    margin-top: 20px;
+    text-align: center;
+  }
+  
+  #videoPreview {
+    width: 100%;
+    max-width: 400px;
+    border-radius: 10px;
+    border: 2px solid #ccc;
+    background-color: black; /* Optional: Add a background color */
+  }                                                                                                                   
+  
+  /* Trigger Emergency Button */
+  #emergencyButton {
+    background-color: #d32f2f;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+    width: 100%;
+  }
+  
+  #emergencyButton:hover {
+    background-color: #b71c1c;
+  }
+  
+  /* Stop Recording Button */
+  #stopRecordingButton {
+    background-color: #ff4444;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    width: 100%;
+  }
+  
+  #stopRecordingButton:hover {
+    background-color: #cc0000;
+  }
