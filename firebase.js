@@ -1,10 +1,10 @@
-// firebase.js
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-import { getDatabase, ref, push } from "firebase/database";
-import { getStorage, ref as storageRef, uploadBytes } from "firebase/storage";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js';
+import { getDatabase } from 'https://www.gstatic.com/firebasejs/10.1.0/firebase-database.js';
+import { getAnalytics } from 'https://www.gstatic.com/firebasejs/10.1.0/firebase-analytics.js';
+import { getStorage, ref as storageRef, uploadBytes } from 'https://www.gstatic.com/firebasejs/10.1.0/firebase-storage.js';
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from 'https://www.gstatic.com/firebasejs/10.1.0/firebase-auth.js';
 
+// Your Firebase configuration and initialization code here
 const firebaseConfig = {
   apiKey: "AIzaSyBcPmTtJiyM2rwbQe7nM0IfiDgKiYtulrA",
   authDomain: "sahaya-5186f.firebaseapp.com",

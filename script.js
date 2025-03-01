@@ -1,4 +1,4 @@
-// DOM Elements
+
 const locationText = document.getElementById('locationText');
 const sosButton = document.getElementById('sosButton');
 const shareLocationButton = document.getElementById('shareLocationButton');
@@ -418,40 +418,7 @@ async function startRecording() {
         alert('Error accessing camera or microphone. Please allow permissions.');
     }
 }
-async function startRecording() {
-    try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-        videoPreview.srcObject = stream;
-        audioPreview.srcObject = stream; // Set audio preview source
-        audioPreview.style.display = 'block'; // Show audio preview
 
-        mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm; codecs=vp9,opus' });
-
-        mediaRecorder.ondataavailable = (event) => {
-            if (event.data.size > 0) {
-                recordedChunks.push(event.data);
-            }
-        };
-
-        mediaRecorder.onstop = async () => {
-            const blob = new Blob(recordedChunks, { type: 'video/webm' });
-            await uploadRecording(blob);
-            recordedChunks = [];
-            audioPreview.style.display = 'none'; // Hide audio preview after recording stops
-            clearInterval(timerInterval); // Stop the timer
-            recordingStatus.textContent = 'Recording: Off'; // Reset status
-        };
-
-        mediaRecorder.start();
-        recordingStartTime = Date.now(); // Record the start time
-        startTimer(); // Start the timer
-        recordingStatus.textContent = 'Recording: On (00:00)'; // Initial timer display
-        alert('Recording started with audio!');
-    } catch (error) {
-        console.error('Error accessing camera or microphone:', error);
-        alert('Error accessing camera or microphone. Please allow permissions.');
-    }
-}
 // Stop Recording
 function stopRecording() {
     if (mediaRecorder && mediaRecorder.state === 'recording') {
@@ -515,14 +482,6 @@ function startTimer() {
     }, 1000); // Update every second
 }
 
-function stopRecording() {
-    if (mediaRecorder && mediaRecorder.state === 'recording') {
-        mediaRecorder.stop();
-        clearInterval(timerInterval); // Stop the timer
-        recordingStatus.textContent = 'Recording: Off';
-        alert('Recording stopped!');
-        audioPreview.style.display = 'none'; // Hide audio preview
-    }
-}
+
 // Initialize
 window.initMap = initMap;
