@@ -1,4 +1,3 @@
-
 const locationText = document.getElementById('locationText');
 const sosButton = document.getElementById('sosButton');
 const shareLocationButton = document.getElementById('shareLocationButton');
@@ -485,3 +484,65 @@ function startTimer() {
 
 // Initialize
 window.initMap = initMap;
+
+document.addEventListener('DOMContentLoaded', () => {
+    const contactForm = document.getElementById('contactForm');
+    const contactGrid = document.getElementById('contactGrid');
+    const sosButton = document.getElementById('sosButton');
+
+    // Load contacts from local storage
+    function loadContacts() {
+        const contacts = JSON.parse(localStorage.getItem('contacts')) || [];
+        contactGrid.innerHTML = '';
+        contacts.forEach(contact => {
+            const contactCard = document.createElement('div');
+            contactCard.classList.add('contact-card');
+            contactCard.innerHTML = `<span>${contact.name}: ${contact.number}</span>`;
+            contactGrid.appendChild(contactCard);
+        });
+    }
+
+    // Save contact to local storage
+    contactForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const name = document.getElementById('contactName').value;
+        const number = document.getElementById('contactNumber').value;
+        let contacts = JSON.parse(localStorage.getItem('contacts')) || [];
+        if (contacts.length < 5) {
+            contacts.push({ name, number });
+            localStorage.setItem('contacts', JSON.stringify(contacts));
+            loadContacts();
+            contactForm.reset();
+        } else {
+            alert('You can only add up to 5 contacts.');
+        }
+    });
+
+    // Send message to contacts
+    sosButton.addEventListener('click', () => {
+        const contacts = JSON.parse(localStorage.getItem('contacts')) || [];
+        if (contacts.length > 0) {
+            fetch('http://localhost:3000/send-sms', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    contacts: contacts,
+                    message: 'User is in danger!'
+                })
+            })
+            .then(response => response.text())
+            .then(data => {
+                console.log(data);
+                alert('Emergency message sent to contacts.');
+            })
+            .catch(error => console.error('Error:', error));
+        } else {
+            alert('No contacts available.');
+        }
+    });
+
+    // Initial load
+    loadContacts();
+});

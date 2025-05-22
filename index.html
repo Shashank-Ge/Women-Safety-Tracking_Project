@@ -27,16 +27,14 @@
 
             <div class="contact-details">
                 <h4>Emergency Contacts</h4>
-                <div class="contact-grid">
-                    <div class="contact-card">
-                        <span>Police: 100</span>
-                        <button class="quick-call">Call</button>
-                    </div>
-                    <div class="contact-card">
-                        <span>Ambulance: 108</span>
-                        <button class="quick-call">Call</button>
-                    </div>
+                <div class="contact-grid" id="contactGrid">
+                    <!-- Contacts will be displayed here -->
                 </div>
+                <form id="contactForm">
+                    <input type="text" id="contactName" placeholder="Contact Name" required>
+                    <input type="text" id="contactNumber" placeholder="Contact Number" required>
+                    <button type="submit">Add Contact</button>
+                </form>
             </div>
         </div>
 
@@ -113,3 +111,41 @@
     <script src="script.js" type="module"></script>
 </body>
 </html>
+
+
+<script>
+
+
+// Ensure DOM is fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+  const sosButton = document.getElementById('sosButton');
+  const locationText = document.getElementById('locationText');
+
+  sosButton.addEventListener('click', async () => {
+    const to = '+918920728628'; // Replace with the recipient's phone number
+    const from = '+12793482183'; // Replace with your Twilio phone number
+    const body = 'Emergency! Please respond.';
+
+    try {
+      const response = await fetch('http://localhost:3000/send-sms', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ to, from, body })
+      });
+      
+      const result = await response.json();
+      if (result.success) {
+        alert('Emergency SMS sent successfully!');
+      } else {
+        alert('Failed to send emergency SMS: ' + result.error);
+      }
+    } catch (error) {
+      console.error('Error sending SMS:', error);
+      alert('An error occurred while sending SMS.');
+    }
+  });
+});
+</script>
+
